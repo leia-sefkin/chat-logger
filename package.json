@@ -1,0 +1,16 @@
+{
+  "name": "chat-logger",
+  "description": "simple chat log API for storing and getting chat objects",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "^1.12.4",
+    "express": "^4.12.4",
+    "lodash": "^3.9.3",
+    "moment": "^2.10.3",
+    "mongoose": "^4.0.4"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "supertest": "^1.0.1"
+  }
+}
