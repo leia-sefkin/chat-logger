@@ -4,11 +4,11 @@ An API for handling events in a chat room.
 
 ## Installation
 
+ `npm install`
+
 Prerequisites:
 - NodeJS 0.12.2
 - MongoDB 3+
-
- `npm install`
 
 ## Running The App
 
@@ -53,7 +53,7 @@ To get a summary of events within a given date range:
 # from and to should be ISO formatted date strings
 # by can be any of the following: minute, hour, day
 
-  curl 'http://localhost:3000/events?from=2015-06-05T15%3A52%3A40.467Z&to=2015-06-05T15%3A52%3A40.659Z&by=minute'
+  curl 'http://localhost:3000/summary?from=2015-06-05T15%3A52%3A40.467Z&to=2015-06-05T15%3A52%3A40.659Z&by=minute'
 
 ```
 

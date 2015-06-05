@@ -256,4 +256,14 @@ describe('Get a summary of Events', function() {
         done();
       });
   });
+
+  it('will return an error with an invalid request', function(done) {
+    request
+      .get('/summary')
+      .end(function(err, res) {
+        expect(res.body).to.be.empty;
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
 });

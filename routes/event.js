@@ -132,7 +132,7 @@ module.exports = function(app) {
       timeFrame = req.query.by;
 
     if (!startDate || !endDate || !timeFrame) {
-      console.warn('Invalid Request: ' + JSON.stringify(body));
+      console.warn('Invalid Request');
       return handleResponse(res)(new Error('Post syntax incorrect.'));
     }
 
