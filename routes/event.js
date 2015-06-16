@@ -102,6 +102,45 @@ module.exports = function(app) {
     });
   });
 
+  /* update an event (by id)
+   * @param req.params.id {Number} required - the id of the event in the database
+  */
+  app.put('/event/:id', function(req, res) {
+    console.info('updating an event with id: ', req.params.id);
+    var id = req.params.id;
+    var body = req.body;
+
+    //we can only update fields that are on the model
+    //date, user, type, message, otheruser
+    var updateData = _.pick(body, ['date', 'user', 'type', 'message', 'otheruser']);
+
+    //return the updated object, and only the fields we want to see
+    var options = {
+      new: true,
+      select: {
+        _id: 0,
+        date: 1,
+        user: 1,
+        type: 1,
+        message: 1,
+        otheruser: 1
+      }
+    };
+
+    Event.findByIdAndUpdate(id, updateData, options).exec(function(err, entry) {
+      if (err) {
+        console.error('Error while updating event: ', err);
+        return handleResponse(res)(err);
+      }
+
+      if (_.isEmpty(entry)) {
+        console.warn('No entry found in database with id: ' + id);
+      }
+
+      handleResponse(res)(null, entry);
+    });
+  });
+
   /*get all events within a date range
    * @param req.query {String} required - the query string containing the DateTime
    * @param req.query.from {String} required - the start date to start searching from, in ISO format

@@ -157,6 +157,51 @@ describe('Create Events', function() {
 
 });
 
+describe('Update Existing Events', function() {
+  this.timeout(3000);
+
+  before(function(done) {
+    Event.create({
+      date: hourAgo,
+      user: 'TestBot_' + now,
+      type: 'enter'
+    }, function(err, res) {
+      if (err) {
+        console.warn('Error while creating event: ' + err);
+        return done(err);
+      }
+
+      eventId = res._id;
+      done();
+    });
+  });
+
+  it('Can update stored event data', function(done) {
+    var newUser = 'TestBot_' + now;
+    var newType = 'leave';
+
+    request.put('/event/' + eventId)
+    .send({
+      user: newUser,
+      type: newType
+    })
+    .end(function(err, res) {
+      var body = res.body;
+      var type = res.get('Content-Type');
+      console.log('Updated Event: ', body, res.status);
+
+      expect(err).to.not.exist;
+      expect(res.status).to.equal(200);
+      expect(type).to.contain('application/json');
+
+      expect(body).to.be.an('object');
+      expect(body.user).to.equal(newUser);
+      expect(body.type).to.equal(newType);
+      done();
+    });
+  });
+});
+
 //Note: this should be run after events have been created
 describe('Read Existing Events', function() {
   this.timeout(3000);
