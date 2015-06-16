@@ -73,6 +73,7 @@ module.exports = function(app) {
   });
 
   /* get an event by id
+  * @param req.params.id {Number} required - the id of the event in the database
   */
   app.get('/event/:id', function(req, res) {
     console.info('getting an event by id: ', req.params.id);
