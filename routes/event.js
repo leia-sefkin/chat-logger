@@ -52,10 +52,7 @@ module.exports = function(app) {
 
     //initialzie the event object with time details for easy sorting later
     var event = {
-      date: now.toJSON(),
-      minute: now.minute(),
-      hour: now.hour(),
-      day: now.day()
+      date: now.toJSON()
     };
 
     //copy over all allowed properties from body
