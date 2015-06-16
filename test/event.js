@@ -8,12 +8,17 @@ var app = require('../server');
 var host = app,
   request = request(host);
 
+//the event model
+var Event = require('../models/event');
+
 //for seeding events so we can test appropriately
 var today = new Date(),
   now = moment.utc(today),
   yesterday = moment.utc(new Date(today.getTime() - (1000*60*60*24))),
   hourAgo = moment.utc(new Date(today.getTime() - (1000*60*60))),
-  from = now.toJSON();
+  from = now.toJSON(),
+  eventId;
+
 
 describe('Create Events', function() {
   this.timeout(3000);
@@ -156,6 +161,22 @@ describe('Create Events', function() {
 describe('Read Existing Events', function() {
   this.timeout(3000);
 
+  before(function(done) {
+    Event.create({
+      date: hourAgo,
+      user: 'TestBot_' + now,
+      type: 'enter'
+    }, function(err, res) {
+      if (err) {
+        console.warn('Error while creating event: ' + err);
+        return done(err);
+      }
+
+      eventId = res._id;
+      done();
+    });
+  });
+
   it('can read events between a date range', function(done) {
     var until = moment.utc().toJSON();
 
@@ -183,6 +204,25 @@ describe('Read Existing Events', function() {
       .end(function(err, res) {
         expect(res.body).to.be.empty;
         expect(res.status).to.equal(400);
+        done();
+      });
+  });
+
+  it('can retrieve an event by id', function(done) {
+    request
+      .get('/event/' + eventId)
+      .end(function(err, res) {
+        var body = res.body;
+        var type = res.get('Content-Type');
+        console.log('Read events: ', body, res.status);
+
+        expect(err).to.not.exist;
+        expect(res.status).to.equal(200);
+        expect(type).to.contain('application/json');
+
+        expect(body).to.be.an('array');
+        expect(body[0]).to.be.an('object');
+        expect(body[0]).to.have.keys('date', 'user', 'type');
         done();
       });
   });
