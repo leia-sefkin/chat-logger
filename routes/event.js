@@ -79,26 +79,18 @@ module.exports = function(app) {
     console.info('getting an event by id: ', req.params.id);
     var id = req.params.id;
 
-    Event.find({
-      _id: id
-    },{
-      _id: 0,
-      date: 1,
-      user: 1,
-      type: 1,
-      message: 1,
-      otheruser: 1
-    }).exec(function(err, entry) {
+    Event.findById(id, '-_id -__v').exec(function(err, entry) {
       if (err) {
         console.error('Error while reading event: ', err);
         return handleResponse(res)(err);
       }
 
-      if (_.isEmpty(entry)) {
+      if (!entry) {
         console.warn('No entry found in database with id: ' + id);
+        handleResponse(res)(null, []);
       }
 
-      handleResponse(res)(null, entry);
+      handleResponse(res)(null, [entry]);
     });
   });
 
